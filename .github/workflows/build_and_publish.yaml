@@ -2,9 +2,8 @@ name: Build studio and ingress
 
 on:
   push:
-    branches:
-      - main
-      - staging
+    tags:
+    - 'v*'
 
   release:
     types: [published]
