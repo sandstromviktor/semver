@@ -15,6 +15,14 @@ jobs:
   build-containers:
     if: github.repository == 'sandstromviktor/semver'
     runs-on: ubuntu-20.04
+    strategy:
+        fail-fast: false
+        matrix:
+          include:
+            - dockerfile: ./Dockerfile
+              image: ghcr.io/${{ github.repository }}/image1
+            - dockerfile: ./Dockerfile.nginx
+              image: ghcr.io/${{ github.repository }}/image2
     permissions:
       packages: write
       contents: read
@@ -26,8 +34,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: |
-            ghcr.io/${{ github.repository }}
+          images: ${{ matrix.image }}
           tags: |
             type=raw,value={{date 'YYYYMMDD'}},prefix=${{ github.ref_name }}-
             type=semver,pattern={{version}}
@@ -46,3 +53,4 @@ jobs:
           push: "${{ github.event_name != 'pull_request' }}"
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          file: ${{ matrix.dockerfile }}
