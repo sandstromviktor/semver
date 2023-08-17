@@ -2,8 +2,11 @@ name: Build studio and ingress
 
 on:
   push:
+    branches:
+      - main
+      - staging
     tags:
-    - 'v*'
+      - 'v*'
 
   release:
     types: [published]
@@ -26,6 +29,7 @@ jobs:
           images: |
             ghcr.io/${{ github.repository }}
           tags: |
+            type=ref,event=branch
             type=semver,pattern={{version}}
 
       - name: Log in to ghcr.io
@@ -35,7 +39,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: docker build ingress
+      - name: docker build
         uses: docker/build-push-action@v2
         with:
           context: .
