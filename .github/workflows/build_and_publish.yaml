@@ -7,22 +7,23 @@ on:
       - staging
     tags:
       - 'v*'
-
   release:
     types: [published]
 
 jobs:
   build-containers:
-    if: github.repository == 'sandstromviktor/semver'
+    if: |
+      github.repository == 'sandstromviktor/semver' &&  
+      github.event_name != 'pull_request' 
     runs-on: ubuntu-20.04
     strategy:
-        fail-fast: false
-        matrix:
-          include:
-            - dockerfile: ./Dockerfile
-              image: ghcr.io/${{ github.repository }}/image1
-            - dockerfile: ./Dockerfile.nginx
-              image: ghcr.io/${{ github.repository }}/image2
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: ./Dockerfile
+            image: ghcr.io/${{ github.repository }}/image1
+          - dockerfile: ./Dockerfile.nginx
+            image: ghcr.io/${{ github.repository }}/image2
     permissions:
       packages: write
       contents: read

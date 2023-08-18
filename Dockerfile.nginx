@@ -1,5 +1,4 @@
 FROM ubuntu:20.04
 
-RUN apt-get update -yq \
-    apt install wget
+RUN apt-get update -yq
 CMD ["sleep 1"]
